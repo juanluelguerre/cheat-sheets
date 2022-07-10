@@ -111,20 +111,19 @@ Get name and namespaces values for a pod
 			§ k logs busybox--1-2pz2c -f.  ------> "-f"
 			
 ## CRON JOBS
-		○ The cron job should be terminated if it takes more than X seconds to start execution after its scheduled time
-			§ startingDeadlineSeconds: x
-		
-\# ┌───────────── minute (0 - 59)
-\# │ ┌───────────── hour (0 - 23)
-\# │ │ ┌───────────── day of the month (1 - 31)
-\# │ │ │ ┌───────────── month (1 - 12)
-\# │ │ │ │ ┌───────────── day of the week (0 - 6) (Sunday to Saturday;
-\# │ │ │ │ │                                   7 is also Sunday on some systems)
-\# │ │ │ │ │                                   OR sun, mon, tue, wed, thu, fri, sat
-\# │ │ │ │ │
-\# * * * * *
-
-## CONFIG MAGPS
+- The cron job should be terminated if it takes more than X seconds to start execution after its scheduled time `startingDeadlineSeconds: X`
+```
+# ┌───────────── minute (0 - 59)
+# │ ┌───────────── hour (0 - 23)
+# │ │ ┌───────────── day of the month (1 - 31)
+# │ │ │ ┌───────────── month (1 - 12)
+# │ │ │ │ ┌───────────── day of the week (0 - 6) (Sunday to Saturday;
+# │ │ │ │ │                                   7 is also Sunday on some systems)
+# │ │ │ │ │                                   OR sun, mon, tue, wed, thu, fri, sat
+# │ │ │ │ │
+# * * * * *
+```
+## CONFIG MAGPS
 ○ When several literals, we have to use --from-literal, for each one
 ○ Create and display a configmap from a file, giving the key 'special'
 	§ k create cm config2 --from-file=special=config.txt --dry-run=client -o yaml
@@ -144,47 +143,46 @@ Get name and namespaces values for a pod
   - name: myvolume # just a name, you'll reference this in the pods
     configMap:
       name: cmvolume # name of your configmap
-## SECURITY CONTEXT
-		spec:
-		  securityContext: # insert this line
-		    runAsUser: 101 # UID for the user
-		
-		    securityContext:
-		      capabilities:
-		        add: ["NET_ADMIN", "SYS_TIME"]
+## SECURITY CONTEXT
 	
-## REQUESTS AND LIMIT
-		○ [DEPRECATED] kubectl run nginx --image=nginx --restart=Never --requests='cpu=100m,memory=256Mi' --limits='cpu=200m,memory=512Mi'
-		○ k run nginx --image=nginx --restart=Never --dry-run=client -o yaml | kubectl set resources -f - --requests=cpu=100m,memory=256Mi --limits=cpu=200m,memory=512Mi --local -o yaml
+spec:
+  securityContext: # insert this line
+    runAsUser: 101 # UID for the user
+
+    securityContext:
+      capabilities:
+	add: ["NET_ADMIN", "SYS_TIME"]
+```
+## REQUESTS AND LIMIT
+- [DEPRECATED] `kubectl run nginx --image=nginx --restart=Never --requests='cpu=100m,memory=256Mi' --limits='cpu=200m,memory=512Mi'`
+- `k run nginx --image=nginx --restart=Never --dry-run=client -o yaml | kubectl set resources -f - --requests=cpu=100m,memory=256Mi --limits=cpu=200m,memory=512Mi --local -o yaml`
 	
 
 ## SECRETS
 		○ kubectl create secret generic mysecret --from-literal=password=mypass
-	
-	  volumes: # specify the volumes
-	  - name: foo # this name will be used for reference inside the container
-	    secret: # we want a secret
-	      secretName: mysecret2 # name of the secret - this must already exist on pod creation
-	
-	    ---
-	
-	    env:
-	      - name: SECRET_USERNAME
-	        valueFrom:
-	          secretKeyRef:
-	            name: mysecret
-	            key: username
-	            optional: false # same as default; "mysecret" must exist
-	                            # and include a key named "username"
+```
+  volumes: # specify the volumes
+  - name: foo # this name will be used for reference inside the container
+    secret: # we want a secret
+      secretName: mysecret2 # name of the secret - this must already exist on pod creation
+```
+
+```
+env:
+- name: SECRET_USERNAME
+valueFrom:
+  secretKeyRef:
+    name: mysecret
+    key: username
+    optional: false # same as default; "mysecret" must exist
+		    # and include a key named "username"
+```
 	
 ## SERVICE ACCOUNT
-		○ New service account:
-			§ kubectl get sa default -o yaml > sa.yaml
-		○ In the pod:
-			§ serviceAccountName: myuser # we use pod.spec.serviceAccountName
-		○ Print out the token of the service account
-		kubectl exec -it backend -- /bin/sh
-		cat /var/run/secrets/kubernetes.io/serviceaccount/token
+- New service account: `kubectl get sa default -o yaml > sa.yaml`
+- In the pod: _serviceAccountName_: myuser # we use pod.spec.serviceAccountName
+- Print out the token of the service account
+`kubectl exec -it backend -- /bin/sh 'cat /var/run/secrets/kubernetes.io/serviceaccount/token'`
 	
   ## BSERVAVILITY
 	   livenessProbe:
@@ -221,24 +219,24 @@ Get name and namespaces values for a pod
 		○ Option 2: k create svc clusterip foo --tcp=6262:8080 
 		
 ## HELM
-		• helm create chart-test 	• this would create a helm 
-		• helm install -f myvalues.yaml my redis ./redis 	• Running helm chart
-		• helm list --pending -A	• Find pending helm deployment on all namespaces
-		• helm list -n <NAMESPACE> -a	Show all to find and delete the broken release
-		• helm uninstall -n namespace release_name	• Uninstall a release
-		• helm upgrade -f myvalues.yaml -f override.yaml redis ./redis	• Upgrading helm chart 
-		• helm repo add [NAME] [URL]  [flags]	• Add, list, remove, update and index chart repos
-		• helm repo list / helm repo ls	        
-		• helm repo remove [REPO1] [flags]	        
-		• helm repo update / helm repo up
-		• helm repo update [REPO1] [flags]
-		• helm repo index [DIR] [flags]
-		• helm pull [chart URL | repo/chartname] [...] [flags] # this would download a helm, not install 	Download a Helm chart from a repository
-		• helm pull --untar [rep/chartname] # untar the chart after downloading it 
-		• ➜ helm -n mercury install internal-issue-report-apache bitnami/apache --set replicaCount=2	Set replicas to 2
-		heml show values [Chart] [flags]	
+• helm create chart-test 	• this would create a helm 
+• helm install -f myvalues.yaml my redis ./redis 	• Running helm chart
+• helm list --pending -A	• Find pending helm deployment on all namespaces
+• helm list -n <NAMESPACE> -a	Show all to find and delete the broken release
+• helm uninstall -n namespace release_name	• Uninstall a release
+• helm upgrade -f myvalues.yaml -f override.yaml redis ./redis	• Upgrading helm chart 
+• helm repo add [NAME] [URL]  [flags]	• Add, list, remove, update and index chart repos
+• helm repo list / helm repo ls	        
+• helm repo remove [REPO1] [flags]	        
+• helm repo update / helm repo up
+• helm repo update [REPO1] [flags]
+• helm repo index [DIR] [flags]
+• helm pull [chart URL | repo/chartname] [...] [flags] # this would download a helm, not install 	Download a Helm chart from a repository
+• helm pull --untar [rep/chartname] # untar the chart after downloading it 
+• ➜ helm -n mercury install internal-issue-report-apache bitnami/apache --set replicaCount=2	Set replicas to 2
 		
-		Nota: Execute 'helm repo update' previously to upgrade a chart to a new version
+- heml show values [Chart] [flags]			
+Nota: Execute 'helm repo update' previously to upgrade a chart to a new version
 
 ## Varios
 
@@ -251,21 +249,17 @@ k get all -n <xxx>
 
 Indent multiple lines
 
-
 Curl with
+- Option1: `k -n pluto expose pod project-plt-6cc-api --nameproject-plt-6cc-svc --port 3333 --target-port 80`
+- Option2 : `k -n pluto create service clusterip project-plt-6cc-svc --tcp3333:80 $do`
 
-Option1    k -n pluto expose pod project-plt-6cc-api --nameproject-plt-6cc-svc --port 3333 --target-port 80
-Option2 : k -n pluto create service clusterip project-plt-6cc-svc --tcp3333:80 $do
-
-Ojo al escribir un "exit" en la consola ---> se cierra la sessión --> hablar con el examinador
-
+**Important:** al escribir un "exit" en la consola ---> se cierra la sessión --> hablar con el examinador
 
 Restart un deploy: k -n moon rollout restart deploy web-moon  --> despues de hacer cambios para aplicarlos     !!!!
 
 "Al consultar los logs hay que especificar el contenedor:  "-c xxxx"
 
 Al incluir un comando linux ej: echo > "/…./../index.html" este path debe ser el mismo indicado en el volumen. No se puede incluir unicamente el nombre del fichero (.html)
-
 
 Al tratar de identificar si un SVC seleccional (selector) o no los pods usar k get pods -o wide en la columna "SELECTOR" se puede apreciar esto y solucionar rapidamente el problema
 
@@ -278,26 +272,25 @@ Nota: El type "NodePort" necesita también un número de puerto nodePort en la s
         - "k -n jupiter get pod -o wide" y la columna "NODE" nos indica en el que se está ejecutando exactamente
         - O, un "k -n jupiter get pod jupiter-crew-deploy-8cdf99bc9-klwqt -o yaml | grep nodeName"
 
-VIM:
+## VIM:
 Create the file ~/.vimrc with the following content:
-	• set tabstop=2
-	• set expandtab
-	• set shiftwidth=2
-
+```
+set tabstop=2
+set expandtab
+set shiftwidth=2
+```
 To indent multiple lines press Esc and type :set shiftwidth=2. First mark multiple lines using Shift v and the up/down keys. Then to indent the marked lines press > or <. You can then press . to repeat the action.
 
+`~/.bashrc` o ejecutarlo directamente in linea de comandos
+`alias kn='kubectl config set-context --current --namespace '`  // ojo al espacio final
 
-~/.bashrc o ejecutarlo directamente in linea de comandos
-alias kn='kubectl config set-context --current --namespace '  // ojo al espacio final
-
-Re-ejecutar el ~/.bashrc , para aplicar cambios ====> . ~/.bashrc 
-
+Re-ejecutar el `~/.bashrc `, para aplicar cambios ====> `. ~/.bashrc`
 
 /etc/hosts ---->  <IP> <name/domain>. Nos permitirá hacer un curo o un wget a dicho nombre/dominio en lugar de indicar la IP
-![image](https://user-images.githubusercontent.com/5904157/178156424-c98272a2-d3a2-4e5d-8b98-704f681b4ebc.png)
 
+	
 ## Varios 2
-Canary deploy: https://phoenixnap.com/kb/kubernetes-canary-deployments
+**Canary deploy**: https://phoenixnap.com/kb/kubernetes-canary-deployments
 Docker image into jar
 Update deployment from V1.15 -> v1.22:  --> usar k explain pods/deploy …. Para conocer la última versión, etc
 Como asignar un % de memoria a un pod según el total de la memoria del cluster !!!
@@ -336,8 +329,6 @@ spec:
         matchLabels:
          kubernetes.io/metadata.name: space2
 
-
-
 Create / Move from one namespace to another, …..
 	• Change the Namespace to neptune, 
 	• also remove the:
@@ -349,6 +340,8 @@ Create / Move from one namespace to another, …..
 	
 	
 In a POD:
+
+```
 …
 spec:
       containers:
@@ -358,8 +351,7 @@ spec:
           allowPrivilegeEscalation: false  # add
           privileged: false                           # add
 …
-
-
+```
 En los servicios (SVC)
 	- --port (ej: 80)--> puerto experto para usar con la ip del Endpoint (k get ep): <IP>:<PORT>
 	- --target-port  (ej: 3333)-> puerto a usar como:  <nombre-servicio>:<TARGET_PORT>
@@ -401,32 +393,34 @@ But there is only one Service, and it only points to the Pods of one Deployment.
 Once we point the Service to the Pods of the new Deployment, all new requests will hit the new image.
 
 Pasos:
-	1. Crear nuevo deployment: misma etiqueta "app: <name>" y "version" pero valor "v2"
-	2. Una ver que todos los pods estan ejectuandose correctamente editar el SVC y cambiar de v1 a v2
-	3. Finalmente: kubectl scale deploy wonderful-v1 --replicas 0 
+1. Crear nuevo deployment: misma etiqueta "app: <name>" y "version" pero valor "v2"
+2. Una ver que todos los pods estan ejectuandose correctamente editar el SVC y cambiar de v1 a v2
+3. Finalmente: kubectl scale deploy wonderful-v1 --replicas 0 
 	
 Rollout Canary
 Pasos:
-	1. Crear nuevo deployment, SIN ninguna etiqueta de versión. Es decir la misma etiqueta "app" usada en el v1 (o deploy inicial)
-	2. El servicio siempre selecciona por dicha etiqutea
-	3. Crear el nuevo deploy
-	4. Y ajustar el escalado al deploy v1 y deploy v2
+1. Crear nuevo deployment, SIN ninguna etiqueta de versión. Es decir la misma etiqueta "app" usada en el v1 (o deploy inicial)
+2. El servicio siempre selecciona por dicha etiqutea
+3. Crear el nuevo deploy
+4. Y ajustar el escalado al deploy v1 y deploy v2
 
 
 Crear un pod y expornerlo en el puerto 80:
-	• k run nginx --image=nginx --expose --port=80 --dry-run=client -o yaml
+• k run nginx --image=nginx --expose --port=80 --dry-run=client -o yaml
 
 To watch a pod
-	• kubectl get po nginx -w #watch it
+• kubectl get po nginx -w #watch it
 
 
 If pod crashed and restarted, get logs about the previous instance
-	• kubectl logs nginx -p
-	Or,
-	• kubectl logs nginx --previous
+• kubectl logs nginx -p
+Or,
+• kubectl logs nginx --previous
 	
 	
 Deploy a pod in a particular Cluser Node
+	
+```
 	apiVersion: v1
 	kind: Pod
 	metadata:
@@ -437,10 +431,11 @@ Deploy a pod in a particular Cluser Node
 	      image: "k8s.gcr.io/cuda-vector-add:v0.1"
 	  nodeSelector: # add this
 	    accelerator: nvidia-tesla-p100 # the select
-	
-	
-	And to use Node Affinity:
-	spec:
+```
+
+And to use Node Affinity:
+```
+spec:
   affinity:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
@@ -449,8 +444,7 @@ Deploy a pod in a particular Cluser Node
           - key: acceleratoroperator: Invalues:
             - nvidia-tesla-p100containers:
     ...
-
-
+```
 Autoscale the deployment, pods between 5 and 10, targetting CPU utilization at 80%
 	kubectl autoscale deploy nginx --min=5 --max=10 --cpu-percent=80
 	# view the horizontalpodautoscalers.autoscaling for nginx
@@ -464,7 +458,7 @@ Delete the deployment and the horizontal pod autoscaler you created
 	
 	
 Ejemplo para un Canary Deployment
-
+```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -504,7 +498,7 @@ spec:
       volumes:
       - name: workdir
         emptyDir: {}
-
+```
 Nota: Mas sencillo puede ser crear la v1 con la imagen httpd:alpine y la v2 con la imagen nginx:alpine !
 
 Experimental: Wait for a specific condition on one or many resources.
@@ -514,34 +508,37 @@ Depurar directamente el JOB en lugar del pod que genera !
 	k logs job/busybox 
 	
 Create a JOB or CRON JOB but ensure that it will be automatically terminated by kubernetes if it takes more than 30 seconds to execute:
-	…
-	spec:
-	  activeDeadlineSeconds: 30
-	  template:
-	    metadata:
-	      labels:
-	        run: busybox
-	    spec:
-	…
+
+```
+…
+spec:
+  activeDeadlineSeconds: 30
+  template:
+    metadata:
+      labels:
+	run: busybox
+    spec:
+…
+```
 	
 The CRON JOB should be terminated if it takes more than 17 seconds to start execution after its scheduled time (i.e. the job missed its scheduled time):
-        ```
-	…
-	apiVersion: batch/v1beta1
-	kind: CronJob
-	metadata:
-	  name: time-limited-job
-	spec:
-	  startingDeadlineSeconds: 17 
-	  jobTemplate:
-	    metadata:
-	      name: time-limited-job
-	    spec:
-	      template:
-	…
+```
+…
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: time-limited-job
+spec:
+  startingDeadlineSeconds: 17 
+  jobTemplate:
+    metadata:
+      name: time-limited-job
+    spec:
+      template:
+…
+```
 	
-
-OJO: la sección "securityContext" puede ir a nivel de POD o bien a nivel de Container . Asegurar bien lo que se pregunta.
+**Important:** la sección "securityContext" puede ir a nivel de POD o bien a nivel de Container . Asegurar bien lo que se pregunta.
 
 Woriking with colums: Lots of pods are running in qa,alan,test,production namespaces. All of these pods are configured with liveness probe. Please list all pods whose liveness probe are failed in the format of <namespace>/<pod name> per line.
 	k get events -n <NAMESPACE>| grep -i 'Liveness probe failed:' | awk '{print $4}'. # repeat for each namespace
@@ -558,4 +555,3 @@ Write the Api Group of Deployments into /root/group .
 	• k explain deploy ->  VERSION: {group}/{version} => "apps/v1".  Por tanto, el valor del Api group es  "apps"
 	
 
-	
