@@ -198,19 +198,19 @@ valueFrom:
       periodSeconds: 5
 ```	
 Lots of pods are running in qa,alan,test,production namespaces. All of these pods are configured with liveness probe. Please list all pods whose liveness probe are failed in the format of <namespace>/<pod name> per line.	
-- kubectl get ns # check namespaces
+- kubectl get ns \# check namespaces
 - kubectl -n qa get events | grep -i "Liveness probe failed"
 - kubectl -n alan get events | grep -i "Liveness probe failed"
 - kubectl -n test get events | grep -i "Liveness probe failed"
 - kubectl -n production get events | grep -i "Liveness probe failed"
 	
 Get CPU/memory utilization for nodes (metrics-server must be running)
-- kubectl top nodes	
-	
+- `kubectl top nodes`	
+
+
 ## SERVICES AND NETWORKING
-	
 - `kubectl run nginx --image=nginx --restart=Never --port=80 --expose \# observe that a pod as well as a service are created`
-- **Importante:** A un Servicio con NodePort, se puede acceder desde el PC indicando el puerto (posiblemente NO el 80 que es el usado internamente)
+- **Importante:** A un Servicio con **NodePort**, se puede acceder desde el PC indicando el puerto (posiblemente NO el 80 que es el usado internamente)
 	
 Create service
 - Option 1: `kubectl expose deploy foo --port=6262 --target-port=8080`
