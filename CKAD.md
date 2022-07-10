@@ -18,7 +18,6 @@ kubectl config get-contexts
 - Si hay que exponer un Deployment a traves de un servicio:
    - Crear el Deploy: `k create deploy xxx --image=  ……" -n <NAMESPACE>`
    - Utilizar a continuación `k expose --port=3333--target-port=80 -n <NAPESPACE>`
-   - `kubectl run nginx --image=nginx --restart=Never --env=var1=val1`
 - **ResourceQuouta:** Asociada al namespace sobre el que se crea. "k create quota myrq  --hard=cpu=1,memory=1G,pods=2 --dry-run -o yaml"
 - To **terminate a JOB**: 
   - activeDeadlineSeconds:  n.  -> when it's successfully started but take more than n  seconds to complete execution
