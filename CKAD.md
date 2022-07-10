@@ -208,48 +208,44 @@ valueFrom:
 	
 ## SERVICES AND NETWORKING
 	
-		○ kubectl run nginx --image=nginx --restart=Never --port=80 --expose
-		# observe that a pod as well as a service are created
-		
-		○ IMPORTANTE A un Servicio con NodePort, se puede acceder desde el PC indicando el puerto (posiblemente NO el 80 que es el usado internamente)
+- `kubectl run nginx --image=nginx --restart=Never --port=80 --expose \# observe that a pod as well as a service are created`
+- **Importante:** A un Servicio con NodePort, se puede acceder desde el PC indicando el puerto (posiblemente NO el 80 que es el usado internamente)
 	
-	
-	Create service
-		○ Option 1: kubectl expose deploy foo --port=6262 --target-port=8080
-		○ Option 2: k create svc clusterip foo --tcp=6262:8080 
-		
+Create service
+- Option 1: `kubectl expose deploy foo --port=6262 --target-port=8080`
+- Option 2: `k create svc clusterip foo --tcp=6262:8080`
+
 ## HELM
-• helm create chart-test 	• this would create a helm 
-• helm install -f myvalues.yaml my redis ./redis 	• Running helm chart
-• helm list --pending -A	• Find pending helm deployment on all namespaces
-• helm list -n <NAMESPACE> -a	Show all to find and delete the broken release
-• helm uninstall -n namespace release_name	• Uninstall a release
-• helm upgrade -f myvalues.yaml -f override.yaml redis ./redis	• Upgrading helm chart 
-• helm repo add [NAME] [URL]  [flags]	• Add, list, remove, update and index chart repos
-• helm repo list / helm repo ls	        
-• helm repo remove [REPO1] [flags]	        
-• helm repo update / helm repo up
-• helm repo update [REPO1] [flags]
-• helm repo index [DIR] [flags]
-• helm pull [chart URL | repo/chartname] [...] [flags] # this would download a helm, not install 	Download a Helm chart from a repository
-• helm pull --untar [rep/chartname] # untar the chart after downloading it 
-• ➜ helm -n mercury install internal-issue-report-apache bitnami/apache --set replicaCount=2	Set replicas to 2
+- helm create chart-test 	• this would create a helm 
+- helm install -f myvalues.yaml my redis ./redis 	• Running helm chart
+- helm list --pending -A	• Find pending helm deployment on all namespaces
+- helm list -n <NAMESPACE> -a	Show all to find and delete the broken release
+- helm uninstall -n namespace release_name	• Uninstall a release
+- helm upgrade -f myvalues.yaml -f override.yaml redis ./redis	• Upgrading helm chart 
+- helm repo add [NAME] [URL]  [flags]	• Add, list, remove, update and index chart repos
+- helm repo list / helm repo ls	        
+- helm repo remove [REPO1] [flags]	        
+- helm repo update / helm repo up
+- helm repo update [REPO1] [flags]
+- helm repo index [DIR] [flags]
+- helm pull [chart URL | repo/chartname] [...] [flags] # this would download a helm, not install 	Download a Helm chart from a repository
+- helm pull --untar [rep/chartname] # untar the chart after downloading it 
+- helm -n mercury install internal-issue-report-apache bitnami/apache --set replicaCount=2	Set replicas to 2
 		
 - heml show values [Chart] [flags]			
-Nota: Execute 'helm repo update' previously to upgrade a chart to a new version
+**Note:** Execute 'helm repo update' previously to upgrade a chart to a new version
 
 ## Varios
 
---restart=Never --rm -i --  curl -m http://xxx:<PUERTO>. // OJO inlcuir namespace -n <xxx> o bien como sufijo de la url: http://xxx.<namespace>:<PUERTO>
+`--restart=Never --rm -i --  curl -m http://xxx:<PUERTO>`. // OJO inlcuir namespace -n <xxx> o bien como sufijo de la url: http://xxx.<namespace>:<PUERTO>
 
-IMAGE BUSYBOX: ---> SH
-IMAGE NGINX: --> BASH !!!!!!
+**Shells**:
+- IMAGE BUSYBOX: ---> SH
+- IMAGE NGINX: --> BASH !
 
 k get all -n <xxx>
 
-Indent multiple lines
-
-Curl with
+**Curl with**
 - Option1: `k -n pluto expose pod project-plt-6cc-api --nameproject-plt-6cc-svc --port 3333 --target-port 80`
 - Option2 : `k -n pluto create service clusterip project-plt-6cc-svc --tcp3333:80 $do`
 
@@ -308,7 +304,7 @@ IMPORTANTE: De manera predeterminada los network policies no se encuentran activ
 There are existing Pods in Namespace space1 and space2 
 We need a new NetworkPolicy named np that restricts all Pods in Namespace space1 to only have outgoing traffic to Pods in Namespace space2 .
 The NetworkPolicy should still allow DNS traffic on port 53 TCP and UDP.
-
+```
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -337,8 +333,8 @@ Create / Move from one namespace to another, …..
 		○ the token volumeMount and,
 		○  the nodeName, 
 	else the new Pod won't start !
-	
-	
+```
+
 In a POD:
 
 ```
@@ -548,10 +544,10 @@ Actualizar el tipo en un servicio
 	
 	
 Version de kubernetes:
-	• kversion 
-	• k version --short. -> {minor}.{mayor}.{patch}
+- `k version`
+- `k version --short`. -> {minor}.{mayor}.{patch}
 
 Write the Api Group of Deployments into /root/group .
-	• k explain deploy ->  VERSION: {group}/{version} => "apps/v1".  Por tanto, el valor del Api group es  "apps"
+- k explain deploy ->  VERSION: {group}/{version} => "apps/v1".  Por tanto, el valor del Api group es  "apps"
 	
 
