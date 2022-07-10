@@ -291,7 +291,7 @@ Docker image into jar
 Update deployment from V1.15 -> v1.22:  --> usar k explain pods/deploy …. Para conocer la última versión, etc
 Como asignar un % de memoria a un pod según el total de la memoria del cluster !!!
 	k get node <NODE> -o yaml | grep -i memory 
-	k get node controlplane -o k explain deploy="['CPU={.status.capacity.cpu}','MEM={.status.capacity.memory}','PODs:{.status.capacity.pods}']{'\n'}"
+	k get node controlplane -o jsonpath="['CPU={.status.capacity.cpu}','MEM={.status.capacity.memory}','PODs:{.status.capacity.pods}']{'\n'}"
 	Ej. de salida: ['CPU=1','MEM=2035376Ki','PODs:110']
 	
 Si se dispone de la instalación del api de motitorización 
