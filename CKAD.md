@@ -143,8 +143,9 @@ Get name and namespaces values for a pod
   - name: myvolume # just a name, you'll reference this in the pods
     configMap:
       name: cmvolume # name of your configmap
+
 ## SECURITY CONTEXT
-	
+```
 spec:
   securityContext: # insert this line
     runAsUser: 101 # UID for the user
@@ -153,13 +154,15 @@ spec:
       capabilities:
 	add: ["NET_ADMIN", "SYS_TIME"]
 ```
+
 ## REQUESTS AND LIMIT
 - [DEPRECATED] `kubectl run nginx --image=nginx --restart=Never --requests='cpu=100m,memory=256Mi' --limits='cpu=200m,memory=512Mi'`
 - `k run nginx --image=nginx --restart=Never --dry-run=client -o yaml | kubectl set resources -f - --requests=cpu=100m,memory=256Mi --limits=cpu=200m,memory=512Mi --local -o yaml`
 	
 
 ## SECRETS
-		○ kubectl create secret generic mysecret --from-literal=password=mypass
+- kubectl create secret generic mysecret --from-literal=password=mypass
+
 ```
   volumes: # specify the volumes
   - name: foo # this name will be used for reference inside the container
@@ -184,27 +187,25 @@ valueFrom:
 - Print out the token of the service account
 `kubectl exec -it backend -- /bin/sh 'cat /var/run/secrets/kubernetes.io/serviceaccount/token'`
 	
-  ## BSERVAVILITY
-	   livenessProbe:
-	      exec:
-	        command:
-	        - cat
-	        - /tmp/healthy
-	      initialDelaySeconds: 5
-	      periodSeconds: 5
+ ## OBSERVAVILITY
+```
+   livenessProbe:
+      exec:
+	command:
+	- cat
+	- /tmp/healthy
+      initialDelaySeconds: 5
+      periodSeconds: 5
+```	
+Lots of pods are running in qa,alan,test,production namespaces. All of these pods are configured with liveness probe. Please list all pods whose liveness probe are failed in the format of <namespace>/<pod name> per line.	
+- kubectl get ns # check namespaces
+- kubectl -n qa get events | grep -i "Liveness probe failed"
+- kubectl -n alan get events | grep -i "Liveness probe failed"
+- kubectl -n test get events | grep -i "Liveness probe failed"
+- kubectl -n production get events | grep -i "Liveness probe failed"
 	
-	Lots of pods are running in qa,alan,test,production namespaces. All of these pods are configured with liveness probe. Please list all pods whose liveness probe are failed in the format of <namespace>/<pod name> per line.
-	
-		○ kubectl get ns # check namespaces
-		○ kubectl -n qa get events | grep -i "Liveness probe failed"
-		○ kubectl -n alan get events | grep -i "Liveness probe failed"
-		○ kubectl -n test get events | grep -i "Liveness probe failed"
-		○ kubectl -n production get events | grep -i "Liveness probe failed"
-	
-	
-	Get CPU/memory utilization for nodes (metrics-server must be running)
-		○ kubectl top nodes
-	
+Get CPU/memory utilization for nodes (metrics-server must be running)
+- kubectl top nodes	
 	
 ## SERVICES AND NETWORKING
 	
