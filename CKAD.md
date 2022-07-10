@@ -124,21 +124,21 @@ Get name and namespaces values for a pod
 # * * * * *
 ```
 ## CONFIG MAGPS
-○ When several literals, we have to use --from-literal, for each one
-○ Create and display a configmap from a file, giving the key 'special'
+- When several literals, we have to use --from-literal, for each one
+- Create and display a configmap from a file, giving the key 'special'
 	§ k create cm config2 --from-file=special=config.txt --dry-run=client -o yaml
-○ When a pod create some keys from a config map
+- When a pod create some keys from a config map
 	env:
 	    - name: option # name of the env variable
 	      valueFrom:
 		configMapKeyRef:
 		  name: options # name of config map
 		  key: var5 # name of the entity in config map
-○ When a pod create all keys from a config map:
+- When a pod create all keys from a config map:
 	envFrom: # different than previous one, that was 'env'
 	    - configMapRef: # different from the previous one, was 'configMapKeyRef'
 		name: anotherone # the name of the config map
-○ When a pod create a volume from a config map:
+- When a pod create a volume from a config map:
   volumes: # add a volumes list
   - name: myvolume # just a name, you'll reference this in the pods
     configMap:
@@ -187,7 +187,7 @@ valueFrom:
 - Print out the token of the service account
 `kubectl exec -it backend -- /bin/sh 'cat /var/run/secrets/kubernetes.io/serviceaccount/token'`
 	
- ## OBSERVAVILITY
+## OBSERVAVILITY
 ```
    livenessProbe:
       exec:
