@@ -30,7 +30,7 @@ kubectl config get-contexts
 - **expose** . Crear un Servicio a partir de un deploy o un pod. Cuando se crear un servicio a partir de deployment se especifica:
    - --port y  --target-port
 - Comando `cut -f -> (field) -d (delimitador)`. Ej: `cat xxxx\yyy\source.txt` o `cut -f 1 -d ":" > xxx\yyy\target.txt`  --> crea un fichero target.txt con el resultado de la primera columna(field) del fichero source.txt
-- Comando "awk" -F "<separador>" '{print $<N>}' -> N: número columna. 
+- Comando "awk" -F "<separador>" '{print $\<N\>}' -> N: número columna. 
 - kubectl get-context // kubectl use-context xxxx // kubectl set-context --current --namespace xx
 - A ReadinessProbe will be executed periodically all the time, not just during start or until a Pod is ready
 - **CRD** (Custom Resources Definition) : k get crd 
